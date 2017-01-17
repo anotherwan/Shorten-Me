@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <title>TinyApp</title>
+    </head>
+    <body>
+
+    <% include ./partials/_header.ejs %>
+
+    <% for (var key in urls) { %>
+      <label> Short Link: </label>
+      <br>
+       <%= key %>
+      <br>
+      <label> Long Link: </label>
+      <br>
+      <%= urls[key] %>
+      <br>
+  <% } %>
+    <p>Dead link to shorten url</p>
+
+    </body>
+  </html>
