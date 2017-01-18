@@ -16,6 +16,10 @@
       <br>
       <%= urls[key] %>
       <br>
+      <form method="POST" action="/urls/<%= key %>" enctype="application/x-www-form-urlencoded">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit">Delete</button>
+</form>
   <% } %>
     <p>Dead link to shorten url</p>
 
