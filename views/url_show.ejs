@@ -4,25 +4,23 @@
       <title>TinyApp</title>
     </head>
     <body>
-  <% include ./partials/_header %>
+      <% include ./partials/_header %>
 
-  <label>Short URL: </label>
-  <%= locals.shortURL %>
-  <br>
-  <label> Long URL: </label>
-  <%= locals.longURL %>
-  <br>
-  <form method="POST" action="/urls/<%= locals.shortURL %>" enctype="application/x-www-form-urlencoded">
-<input type="hidden" name="_method" value="DELETE">
-<button type="submit">Delete</button>
-</form>
+      <label>Short URL: </label>
+        <%= locals.shortURL %>
+      <br>
+      <label> Long URL: </label>
+        <%= locals.longURL %>
+      <br>
+      <form method="POST" action="/urls/<%= locals.shortURL %>" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="_method" value="DELETE">
+          <button type="submit">Delete</button>
+      </form>
 
-<form method="POST" action="/urls/<%= shortURL %>/edit" enctype="application/x-www-form-urlencoded">
-<input type="hidden" name="_method" value="GET">
-<button type="submit">Edit</button>
-</form>
-
-    <p>Dead link to edit URL</p>
+      <form method="POST" action="/urls/<%= shortURL %>/edit" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="_method" value="GET">
+          <button type="submit">Edit</button>
+      </form>
 
     </body>
   </html>
