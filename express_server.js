@@ -32,27 +32,38 @@ function generateRandomString(length, CHARS) {
   return result
 }
 
-app.get("/", (req, res) => {
-  res.end("Hello!");
-});
 
 app.get("/urls", (req, res) => {
   res.render('urls_index', { urls: urlDatabase })
 });
+
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
+
+//this route shows individual links with a delete and edit button
+app.get("/urls/:id", (req, res) => {
+
+  res.render("url_show", { shortURL: req.params.id, longURL: urlDatabase[req.params.id] });
+});
+
+//this route GETs the content of the /urls/:id page
+app.get("/urls/:id/edit", (req, res) => {
+  res.render("url_show_edit", { shortURL: req.params.id, longURL: urlDatabase[req.params.id] })
+});
+
+app.put("/urls/:id", (req, res) => {
+  let newLongURL = req.body.updatedLongURL
+  urlDatabase[req.params.id] = newLongURL
+  res.redirect('/urls')
+})
 
 app.delete("/urls/:id", (req, res) => {
   console.log('Deleting')
   delete urlDatabase[req.params.id]
   res.redirect('/urls')
 })
-
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
-});
-
-app.get("/urls/:id", (req, res) => {
-  res.render("url_show", { shortURL: req.params.id, longURL: urlDatabase[req.params.id] });
-});
 
 
 app.post("/urls", (req, res) => {
@@ -64,9 +75,11 @@ app.post("/urls", (req, res) => {
 })
 
 app.get("/u/:shortURL", (req, res) => {
+  // console.log(req.params)
   let longURL = urlDatabase[req.params.shortURL]
   res.redirect(longURL)
 })
+
 
 // app.get("/urls.json", (req, res) => {
 //   res.json(urlDatabase);
