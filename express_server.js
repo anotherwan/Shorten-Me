@@ -135,6 +135,65 @@ app.post('/register', (req, res) => {
 
 
 
+app.get('/login', (req, res) => {
+  res.render('login')
+})
+
+app.put("/login", (req, res) => {
+  let emailMatch = false
+  let passwordMatch = false
+  for (let user_id in usersDatabase) {
+    if (usersDatabase[user_id].email === req.body.email) {
+      if (usersDatabase[user_id].password === req.body.password) {
+        emailMatch = true
+        passwordMatch = true
+      }
+    }
+  }
+  if (emailMatch === true && passwordMatch === true) {
+    res.cookie('user_email', req.body.email)
+    res.redirect('/urls')
+  } else {
+    res.status(400).send('Email and/or password do not match!')
+  }
+})
+
+app.post("/logout", (req, res) => {
+  res.clearCookie('user_email')
+  res.redirect('/urls')
+})
+
+app.get('/register', (req, res) => {
+  res.render('registration')
+})
+
+app.post('/register', (req, res) => {
+  let randomUserId = generateRandomString(6, CHARS)
+  let emailExists = false;
+  for (var user_id in usersDatabase) {
+    if (usersDatabase[user_id].email === req.body.email) {
+      emailExists = true;
+    }
+  }
+  if (emailExists) {
+    res.status(400).send('Email already exists!')
+  } else if (req.body.email === "" || req.body.password === "") {
+    res.status(400).send('Please enter both an email and password!')
+  } else {
+    res.cookie('user_email', req.body.email)
+    usersDatabase[randomUserId] = {
+      id: randomUserId,
+      email: req.body.email,
+      password: req.body.password
+    }
+  }
+  res.redirect('/urls')
+})
+
+
+
+
+
 // app.get("/urls.json", (req, res) => {
 //   res.json(urlDatabase);
 // });

@@ -1,12 +1,21 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/cookies
 <% if (email) { %>
   <h2>Welcome,  <%= email %> </h2>
     <form action="/logout" method="POST">
       <input type="submit" value="Logout">
     </form>
 <% } else { %>
+<<<<<<< HEAD
   <form method="POST" action="/login" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="_method" value="PUT">
       <input type="text" name="username" placeholder="Username">
       <input type="submit" value="Login">
   </form>
+=======
+  <a href="/login">Click here to Log in</a>
+  <br>
+>>>>>>> feature/cookies
 <% } %>
