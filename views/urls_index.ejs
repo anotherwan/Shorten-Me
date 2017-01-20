@@ -6,7 +6,10 @@
     <body>
 
     <% include ./partials/_header %>
-
+    <br>
+    <a href="/urls/new">Create a new Link</a>
+    <br>
+    <br>
     <% for (var key in urls) { %>
       <label> Short Link: </label>
       <br>
@@ -14,7 +17,7 @@
       <br>
       <label> Long Link: </label>
       <br>
-      <%= urls[key] %>
+      <%= urls[key].longURL %>
       <br>
       <form method="POST" action="/urls/<%= key %>" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="_method" value="DELETE">
