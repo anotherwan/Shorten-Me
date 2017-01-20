@@ -92,48 +92,6 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL)
 })
 
-app.put("/login", (req, res) => {
-  res.cookie('user_email', req.body.email)
-  res.redirect('/urls')
-})
-
-app.post("/logout", (req, res) => {
-  res.clearCookie('user_email')
-  res.redirect('/urls')
-})
-
-app.get('/register', (req, res) => {
-  res.render('registration')
-})
-
-app.post('/register', (req, res) => {
-  let randomUserId = generateRandomString(6, CHARS)
-  let emailExists = false;
-  for (var user_id in usersDatabase) {
-
-    if (usersDatabase[user_id].email === req.body.email) {
-      emailExists = true;
-    }
-  }
-  if (emailExists) {
-    res.status(400).send('Email already exists!')
-  } else if (req.body.email === "" || req.body.password === "") {
-    res.status(400).send('Please enter both an email and password!')
-  } else {
-    res.cookie('user_email', req.body.email)
-    usersDatabase[randomUserId] = {
-      id: randomUserId,
-      email: req.body.email,
-      password: req.body.password
-    }
-  }
-    // console.log(usersDatabase)
-    res.redirect('/urls')
-})
-
-
-
-
 
 app.get('/login', (req, res) => {
   res.render('login')
