@@ -98,23 +98,50 @@ app.get('/login', (req, res) => {
 })
 
 app.put("/login", (req, res) => {
-  let emailMatch = false
-  let passwordMatch = false
   for (let user_id in usersDatabase) {
-    if (usersDatabase[user_id].email === req.body.email) {
-      if (usersDatabase[user_id].password === req.body.password) {
-        emailMatch = true
-        passwordMatch = true
-      }
+    if (usersDatabase[user_id].email === req.body.email && usersDatabase[user_id].password === req.body.password) {
+      res.cookie('user_email', usersDatabase[user_id].email)
+      res.redirect('/urls')
+    } else {
+      res.status(403).send('Email and/or password do not match')
     }
   }
-  if (emailMatch === true && passwordMatch === true) {
-    res.cookie('user_email', req.body.email)
-    res.redirect('/urls')
-  } else {
-    res.status(400).send('Email and/or password do not match!')
-  }
+  // let emailMatch = false
+  // let passwordMatch = false
+  // for (let user_id in usersDatabase) {
+  //   if (usersDatabase[user_id].email === req.body.email) {
+  //     if (usersDatabase[user_id].password === req.body.password) {
+  //       emailMatch = true
+  //       passwordMatch = true
+  //     }
+  //   }
+  // }
+  // if (emailMatch === true && passwordMatch === true) {
+  //   res.cookie('user_email', req.body.email)
+  //   res.redirect('/urls')
+  // } else {
+  //   res.status(403).send('Email and/or password do not match!')
+  // }
 })
+
+// app.put("/login", (req, res) => {
+//   let emailMatch = false
+//   let passwordMatch = false
+//   for (let user_id in usersDatabase) {
+//     if (usersDatabase[user_id].email === req.body.email) {
+//       if (usersDatabase[user_id].password === req.body.password) {
+//         emailMatch = true
+//         passwordMatch = true
+//       }
+//     }
+//   }
+//   if (emailMatch === true && passwordMatch === true) {
+//     res.cookie('user_email', req.body.email)
+//     res.redirect('/urls')
+//   } else {
+//     res.status(400).send('Email and/or password do not match!')
+//   }
+// })
 
 app.post("/logout", (req, res) => {
   res.clearCookie('user_email')
