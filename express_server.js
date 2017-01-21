@@ -26,12 +26,14 @@ app.use(methodOverride(function (req, res) {
 
 global.urlDatabase = {
   'b2xVn2': {
+    id: 'b2xVn2',
     longURL: 'http://www.lighthouselabs.ca',
-    userID: 'userRandomID'
+    userID: 'user@example.com'
   },
   '9sm5xK': {
+    id: '9sm5xK',
     longURL: 'http://www.google.com',
-    userID: 'user2RandomID'
+    userID: 'user2@example.com'
   }
 
 }
@@ -75,41 +77,53 @@ function checkBlankParams(req) {
 }
 
 app.get('/urls', (req, res) => {
+  let userUrls = {}
+  for (let key in urlDatabase) {
+    if (urlDatabase[key].userID === req.cookies.userEmail) {
+      userUrls[key] = urlDatabase[key]
+    }
+  }
   res.render('urls_index', {
-    urls: urlDatabase,
+    urls: userUrls,
     email: req.cookies.userEmail
    })
 })
 
 app.get('/urls/new', (req, res) => {
   let foundUser = req.cookies.userEmail
-  console.log(foundUser)
   if (foundUser) {
     res.render('urls_new', { userUrls: urlDatabase, email: foundUser })
   } else {
     res.redirect('/login')
   }
-
 })
 
 app.post('/urls', (req, res) => {
-  let shortURL = generateRandomString(6, CHARS)
-  let longUrl = req.body.longURL
-  urlDatabase[shortURL] = longUrl
-  res.redirect(`/urls/${shortURL}`)
+  let newShortURL = generateRandomString(6, CHARS)
+  urlDatabase[newShortURL] = {
+    id: newShortURL,
+    longURL: req.body.longURL,
+    userID: req.cookies.userEmail
+  }
+  res.redirect(`/urls`)
 })
 
 app.get('/urls/:id', (req, res) => {
-  res.render('url_show', { shortURL: req.params.id, longURL: urlDatabase[req.params.id] })
+  res.render('url_show', { shortURL: req.params.id, longURL: urlDatabase[req.params.id].longURL, email: req.cookies.userEmail })
 })
 
 app.get('/urls/:id/edit', (req, res) => {
-  res.render('url_show_edit', { shortURL: req.params.id, longURL: urlDatabase[req.params.id] })
+  let foundUser = req.cookies.userEmail
+  if (foundUser) {
+    res.render('url_show_edit', { shortURL: req.params.id, longURL: urlDatabase[req.params.id].longURL, email: foundUser })
+  } else {
+    res.redirect('/login')
+  }
 })
 
 app.put('/urls/:id', (req, res) => {
   let newLongURL = req.body.updatedLongURL
-  urlDatabase[req.params.id] = newLongURL
+  urlDatabase[req.params.id].longURL = newLongURL
   res.redirect('/urls')
 })
 
@@ -119,7 +133,7 @@ app.delete('/urls/:id', (req, res) => {
 })
 
 app.get('/u/:shortURL', (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL]
+  let longURL = urlDatabase[req.params.shortURL].longURL
   res.redirect(longURL)
 })
 
