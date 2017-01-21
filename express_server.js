@@ -109,13 +109,19 @@ app.post('/urls', (req, res) => {
 })
 
 app.get('/urls/:id', (req, res) => {
-  res.render('url_show', { shortURL: req.params.id, longURL: urlDatabase[req.params.id].longURL, email: req.cookies.userEmail })
+  res.render('url_show', {
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id].longURL,
+    email: req.cookies.userEmail })
 })
 
 app.get('/urls/:id/edit', (req, res) => {
   let foundUser = req.cookies.userEmail
   if (foundUser) {
-    res.render('url_show_edit', { shortURL: req.params.id, longURL: urlDatabase[req.params.id].longURL, email: foundUser })
+    res.render('url_show_edit', {
+      shortURL: req.params.id,
+      longURL: urlDatabase[req.params.id].longURL,
+      email: foundUser })
   } else {
     res.redirect('/login')
   }
