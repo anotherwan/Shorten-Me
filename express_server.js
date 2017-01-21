@@ -7,8 +7,8 @@ const bcrypt = require('bcrypt')
 const cookieSession = require('cookie-session')
 const methodOverride = require('method-override')
 const PORT = process.env.PORT || 8080
-const functions = require('./functions.js')
-const CHARS = functions.generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+const requiredFunctions = require('./requiredFunctions.js')
+const CHARS = requiredFunctions.generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}))
@@ -74,7 +74,7 @@ app.get('/urls/new', (req, res) => {
 })
 
 app.post('/urls', (req, res) => {
-  let newShortURL = functions.generateRandomString(6, CHARS)
+  let newShortURL = requiredFunctions.generateRandomString(6, CHARS)
   urlDatabase[newShortURL] = {
     id: newShortURL,
     longURL: req.body.longURL,
@@ -124,12 +124,12 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-  functions.checkBlankParams(req)
-  let foundUser = functions.findUserEmail(req)
+  requiredFunctions.checkBlankParams(req)
+  let foundUser = requiredFunctions.findUserEmail(req)
   if (foundUser) {
     res.status(403).send('Email already exists!')
   } else {
-    let randomUserId = functions.generateRandomString(6, CHARS)
+    let randomUserId = requiredFunctions.generateRandomString(6, CHARS)
     let foundUser = req.body.email
     req.session.userEmail = foundUser
     usersDatabase[randomUserId] = {
@@ -146,8 +146,8 @@ app.get('/login', (req, res) => {
 })
 
 app.put('/login', (req, res) => {
-  functions.checkBlankParams(req)
-  let foundUser = functions.findUserEmail(req)
+  requiredFunctions.checkBlankParams(req)
+  let foundUser = requiredFunctions.findUserEmail(req)
   if (!foundUser || !bcrypt.compareSync(req.body.password, foundUser.password)) {
     res.status(403).send('Incorrect email or password')
   } else {
