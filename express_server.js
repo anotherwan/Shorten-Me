@@ -7,9 +7,7 @@ const cookieParser = require('cookie-parser')
 const methodOverride = require('method-override')
 const PORT = process.env.PORT || 8080
 const CHARS = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-// const bcrypt = require('bcrypt')
-// const hashed_password = bcrypt.hashSync(password, 10)
-
+const bcrypt = require('bcrypt')
 
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}))
@@ -25,30 +23,33 @@ app.use(methodOverride(function (req, res) {
 
 
 global.urlDatabase = {
-  'b2xVn2': {
-    id: 'b2xVn2',
-    longURL: 'http://www.lighthouselabs.ca',
-    userID: 'user@example.com'
-  },
-  '9sm5xK': {
-    id: '9sm5xK',
-    longURL: 'http://www.google.com',
-    userID: 'user2@example.com'
-  }
+  // 'b2xVn2': {
+  //   id: 'b2xVn2',
+  //   longURL: 'http://www.lighthouselabs.ca',
+  //   userID: 'user@example.com'
+  // },
+  // '9sm5xK': {
+  //   id: '9sm5xK',
+  //   longURL: 'http://www.google.com',
+  //   userID: 'user2@example.com'
+  // }
 
 }
 
+// const userRandomIDPass = "shitpass1"
+// const hashfirstPass = bcrypt.hashSync(userRandomIDPass, 10)
+
 global.usersDatabase = {
-  'userRandomID': {
-    id: 'userRandomID',
-    email: 'user@example.com',
-    password: '1234'
-  },
-  'user2RandomID': {
-    id: 'user2RandomID',
-    email: 'user2@example.com',
-    password: '4321'
-  }
+  // 'userRandomID': {
+  //   id: 'userRandomID',
+  //   email: 'user@example.com',
+  //   password: '1234'
+  // },
+  // 'user2RandomID': {
+  //   id: 'user2RandomID',
+  //   email: 'user2@example.com',
+  //   password: '4321'
+  // }
 }
 
 function generateRandomString(length, CHARS) {
@@ -149,9 +150,10 @@ app.get('/login', (req, res) => {
 })
 
 app.put('/login', (req, res) => {
+  console.log(usersDatabase)
   checkBlankParams(req)
   let foundUser = findUserEmail(req)
-  if (!foundUser || foundUser.password != req.body.password) {
+  if (!foundUser || !bcrypt.compareSync(req.body.password, foundUser.password)) {
     res.status(403).send('Incorrect email or password')
   } else {
     res.cookie('userEmail', foundUser.email)
@@ -180,7 +182,7 @@ app.post('/register', (req, res) => {
     usersDatabase[randomUserId] = {
       id: randomUserId,
       email: req.body.email,
-      password: req.body.password
+      password: bcrypt.hashSync(req.body.password, 10)
     }
     res.redirect('/urls')
   }
