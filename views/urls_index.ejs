@@ -12,7 +12,7 @@
     <% for (var key in urls) { %>
       <label> Short Link: </label>
       <br>
-       <%= key %>
+       <a href="<% urls[key].longURL %>"> <%= key %> </a>
       <br>
       <label> Long Link: </label>
       <br>
