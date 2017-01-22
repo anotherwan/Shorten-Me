@@ -3,15 +3,16 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
+const bcrypt = require('bcrypt')
+const cookieSession = require('cookie-session')
 const methodOverride = require('method-override')
 const PORT = process.env.PORT || 8080
-const CHARS = generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-const bcrypt = require('bcrypt')
+const requiredFunctions = require('./requiredFunctions.js')
+const CHARS = requiredFunctions.generateRandomString(6, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 app.set('view engine', 'ejs')
+app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
-app.use(cookieParser())
 app.use(methodOverride(function (req, res) {
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
     // look in urlencoded POST bodies and delete it
@@ -20,7 +21,10 @@ app.use(methodOverride(function (req, res) {
     return method
   }
 }))
-
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key']
+}))
 
 global.urlDatabase = {
   // 'b2xVn2': {
@@ -36,9 +40,6 @@ global.urlDatabase = {
 
 }
 
-// const userRandomIDPass = "shitpass1"
-// const hashfirstPass = bcrypt.hashSync(userRandomIDPass, 10)
-
 global.usersDatabase = {
   // 'userRandomID': {
   //   id: 'userRandomID',
@@ -52,46 +53,24 @@ global.usersDatabase = {
   // }
 }
 
-function generateRandomString(length, CHARS) {
-  var result = ''
-  for (var i = length; i > 0; i--) {
-    result += CHARS[Math.floor(Math.random() * CHARS.length)]
-  }
-  return result
-}
-
-function findUserEmail(req) {
-  let foundUser = null
-  for (let userId in usersDatabase) {
-    if (usersDatabase[userId].email === req.body.email) {
-      foundUser = usersDatabase[userId]
-      break
-    }
-  }
-  return foundUser
-}
-
-function checkBlankParams(req) {
-  if (req.body.email === '' || req.body.password === '') {
-    res.status(403).send('Email or password must be filled in')
-  }
-}
-
 app.get('/urls', (req, res) => {
+  let foundUser = req.session.userEmail
   let userUrls = {}
-  for (let key in urlDatabase) {
-    if (urlDatabase[key].userID === req.cookies.userEmail) {
-      userUrls[key] = urlDatabase[key]
+  if (foundUser) {
+    for (let key in urlDatabase) {
+      if (urlDatabase[key].userID === req.session.userEmail) {
+        userUrls[key] = urlDatabase[key]
+      }
     }
   }
   res.render('urls_index', {
     urls: userUrls,
-    email: req.cookies.userEmail
-   })
+    email: req.session.userEmail
+  })
 })
 
 app.get('/urls/new', (req, res) => {
-  let foundUser = req.cookies.userEmail
+  let foundUser = req.session.userEmail
   if (foundUser) {
     res.render('urls_new', { userUrls: urlDatabase, email: foundUser })
   } else {
@@ -100,11 +79,11 @@ app.get('/urls/new', (req, res) => {
 })
 
 app.post('/urls', (req, res) => {
-  let newShortURL = generateRandomString(6, CHARS)
+  let newShortURL = requiredFunctions.generateRandomString(6, CHARS)
   urlDatabase[newShortURL] = {
     id: newShortURL,
     longURL: req.body.longURL,
-    userID: req.cookies.userEmail
+    userID: req.session.userEmail
   }
   res.redirect(`/urls`)
 })
@@ -113,11 +92,11 @@ app.get('/urls/:id', (req, res) => {
   res.render('url_show', {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].longURL,
-    email: req.cookies.userEmail })
+    email: req.session.userEmail })
 })
 
 app.get('/urls/:id/edit', (req, res) => {
-  let foundUser = req.cookies.userEmail
+  let foundUser = req.session.userEmail
   if (foundUser) {
     res.render('url_show_edit', {
       shortURL: req.params.id,
@@ -128,6 +107,7 @@ app.get('/urls/:id/edit', (req, res) => {
   }
 })
 
+//route for editing single short url
 app.put('/urls/:id', (req, res) => {
   let newLongURL = req.body.updatedLongURL
   urlDatabase[req.params.id].longURL = newLongURL
@@ -144,41 +124,19 @@ app.get('/u/:shortURL', (req, res) => {
   res.redirect(longURL)
 })
 
-
-app.get('/login', (req, res) => {
-  res.render('login')
-})
-
-app.put('/login', (req, res) => {
-  console.log(usersDatabase)
-  checkBlankParams(req)
-  let foundUser = findUserEmail(req)
-  if (!foundUser || !bcrypt.compareSync(req.body.password, foundUser.password)) {
-    res.status(403).send('Incorrect email or password')
-  } else {
-    res.cookie('userEmail', foundUser.email)
-    res.redirect('/urls')
-  }
-})
-
-app.post('/logout', (req, res) => {
-  res.clearCookie('userEmail')
-  res.redirect('/login')
-})
-
 app.get('/register', (req, res) => {
   res.render('registration')
 })
 
 app.post('/register', (req, res) => {
-  checkBlankParams(req)
-  let foundUser = findUserEmail(req)
+  requiredFunctions.checkBlankParams(req)
+  let foundUser = requiredFunctions.findUserEmail(req)
   if (foundUser) {
     res.status(403).send('Email already exists!')
   } else {
-    let randomUserId = generateRandomString(6, CHARS)
+    let randomUserId = requiredFunctions.generateRandomString(6, CHARS)
     let foundUser = req.body.email
-    res.cookie('userEmail', foundUser)
+    req.session.userEmail = foundUser
     usersDatabase[randomUserId] = {
       id: randomUserId,
       email: req.body.email,
@@ -187,33 +145,31 @@ app.post('/register', (req, res) => {
     res.redirect('/urls')
   }
 })
+app.get('/login', (req, res) => {
+  res.render('login')
+})
 
-// app.get('/urls.json', (req, res) => {
-//   res.json(urlDatabase)
-// })
+app.put('/login', (req, res) => {
+  requiredFunctions.checkBlankParams(req)
+  let foundUser = requiredFunctions.findUserEmail(req)
+  if (!foundUser || !bcrypt.compareSync(req.body.password, foundUser.password)) {
+    res.status(403).send('Incorrect email or password')
+  } else {
+    req.session.userEmail = foundUser.email
+    res.redirect('/urls')
+  }
+})
+
+app.post('/logout', (req, res) => {
+  req.session = null
+  res.redirect('/login')
+})
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`)
 })
 
-// get /
-//const current_user = req.signedCookies.current_user
-
-// const username = data,ysers,find((user) => {
-//   return user,name === username
+// app.get('/urls.json', (req, res) => {
+//   res.json(urlDatabase)
 // })
-
-// bcrypt.compare(password, user.password, (err, matched) => {
-//   if (matched) {
-//     ('curreent_user',, user.username, {
-//       signed: true})
-//       res.redirect('/treassure')
-//     })
-//     else {
-//       res.redirect('/login/')
-//     }
-//   }
-// })
-// }
-// post '/signup'
-// bcrypt.hash(req.body.password, 10, )
