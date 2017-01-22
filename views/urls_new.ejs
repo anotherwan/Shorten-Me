@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head></head>
-  <body style="font-size:20px; padding:50px;">
+  <html>
+  <head>
+    <% include ./partials/_materializeHead %>
+  </head>
+  <body>
+    <% include ./partials/_materializeBody %>
     <% include ./partials/_header %>
     <br>
-    <form action="/urls" method="POST" style="margin:150px;">
-      <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-      <input type="submit" value="Submit">
-    </form>
+    <br>
+    <div class="container blue-grey lighten-5 col s12">
+      <div class="row">
+        <h3 class="teal-text text-teal-lighten-2 col s8 offset-s2"><strong>Create a new short URL:</strong></h3>
+        <form action="/urls" method="POST">
+          <div class="input-field col s8 offset-s2">
+            <input id="longURL" type="text" name="longURL" placeholder="http://www.example.com">
+            <label for="enterURL">Enter a URL:</label>
+          </div>
+          <input class="blue-grey lighten-4 blue-grey-text text-darken-4 btn" type="submit" value="Submit">
+        </form>
+      </div>
+    </div>
   </body>
-</html>
+  </html>
