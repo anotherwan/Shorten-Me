@@ -62,11 +62,13 @@ app.get('/urls', (req, res) => {
         userUrls[key] = urlDatabase[key]
       }
     }
+    res.render('urls_index', {
+      urls: userUrls,
+      email: req.session.userEmail
+    })
+  } else {
+    res.redirect('/login')
   }
-  res.render('urls_index', {
-    urls: userUrls,
-    email: req.session.userEmail
-  })
 })
 
 app.get('/urls/new', (req, res) => {
@@ -89,10 +91,17 @@ app.post('/urls', (req, res) => {
 })
 
 app.get('/urls/:id', (req, res) => {
-  res.render('url_show', {
-    shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id].longURL,
-    email: req.session.userEmail })
+  if (req.params.id != urlDatabase[req.params.id].id) {
+    console.log(req.params.id)
+    console.log(urlDatabase[req.params.id])
+    return res.status(404).send('This short URL does not exist!')
+  } else {
+    res.render('url_show', {
+      shortURL: req.params.id,
+      longURL: urlDatabase[req.params.id].longURL,
+      email: req.session.userEmail })
+  }
+
 })
 
 app.get('/urls/:id/edit', (req, res) => {
@@ -110,8 +119,12 @@ app.get('/urls/:id/edit', (req, res) => {
 //route for editing single short url
 app.put('/urls/:id', (req, res) => {
   let newLongURL = req.body.updatedLongURL
+  if (req.params.shortURL != urlDatabase[req.params.shortURL]) {
+    return res.status(404).send('This shortURL does not exist!')
+  } else {
   urlDatabase[req.params.id].longURL = newLongURL
   res.redirect('/urls')
+  }
 })
 
 app.delete('/urls/:id', (req, res) => {
@@ -120,8 +133,12 @@ app.delete('/urls/:id', (req, res) => {
 })
 
 app.get('/u/:shortURL', (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL].longURL
-  res.redirect(longURL)
+  if (req.params.shortURL != urlDatabase[req.params.shortURL].id) {
+    return res.status(404).send('This shortURL does not exist!')
+  } else {
+    let longURL = urlDatabase[req.params.shortURL].longURL
+    res.redirect(longURL)
+  }
 })
 
 app.get('/register', (req, res) => {
@@ -132,7 +149,7 @@ app.post('/register', (req, res) => {
   requiredFunctions.checkBlankParams(req)
   let foundUser = requiredFunctions.findUserEmail(req)
   if (foundUser) {
-    res.status(403).send('Email already exists!')
+    return res.status(403).send('Email already exists!')
   } else {
     let randomUserId = requiredFunctions.generateRandomString(6, CHARS)
     let foundUser = req.body.email
@@ -153,7 +170,7 @@ app.put('/login', (req, res) => {
   requiredFunctions.checkBlankParams(req)
   let foundUser = requiredFunctions.findUserEmail(req)
   if (!foundUser || !bcrypt.compareSync(req.body.password, foundUser.password)) {
-    res.status(403).send('Incorrect email or password')
+    return res.status(403).send('Incorrect email or password')
   } else {
     req.session.userEmail = foundUser.email
     res.redirect('/urls')
