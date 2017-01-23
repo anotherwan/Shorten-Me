@@ -1,25 +1,22 @@
 <!DOCTYPE html>
   <html lang="en">
-    <head>
-      <title>TinyApp</title>
-    </head>
-    <body>
+    <body style="font-size:20px; padding:50px;">
       <% include ./partials/_header %>
-      <label>Short URL: </label>
-        <%= locals.shortURL %>
       <br>
-      <label> Long URL: </label>
-        <%= locals.longURL %>
+      <br>
+      <label><strong>Short Link:</strong></label>&nbsp; <%= locals.shortURL %>
+      <br>
+      <label><strong>Long Link:</strong></label>&nbsp; <a href="/u/<%= locals.shortURL %>"> <%= locals.longURL %> </a>
+      <br>
       <br>
       <form method="POST" action="/urls/<%= locals.shortURL %>" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="_method" value="DELETE">
           <button type="submit">Delete</button>
       </form>
-
       <form method="POST" action="/urls/<%= shortURL %>/edit" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="_method" value="GET">
           <button type="submit">Edit</button>
       </form>
-    <a href="/urls">Home Page</a>
+      <br>
     </body>
   </html>

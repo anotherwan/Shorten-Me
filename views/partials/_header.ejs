@@ -1,14 +1,21 @@
-
-<% if (locals.email) { %>
-  <h2>Welcome,  <%= locals.email %> </h2>
+<nav>
+  <h1><a href="/urls">TinyApp</a></h1>
+  <% if (locals.email) { %>
+  <h3>Welcome,  <%= locals.email %> </h3>
     <form action="/logout" method="POST">
       <input type="submit" value="Logout">
     </form>
 <% } else { %>
   <br>
-  <a href="/login">Click here to Log in</a>
+  <form action="/login" method="GET">
+    <input type="submit" value="Login">
+  </form>
+  <!-- <a href="/login">Click here to Log in</a> -->
   <br>
-  <a href="/register">Click here to register!</a>
+  <form action="/register" method="GET">
+    <input type="submit" value="Register">
+  </form>
+  <!-- <a href="/register">Click here to register!</a> -->
   <br>
-
 <% } %>
+</nav>

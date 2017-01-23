@@ -1,32 +1,31 @@
 <!DOCTYPE html>
   <html lang="en">
-    <head>
-      <title>TinyApp</title>
-    </head>
-    <body>
-
-    <% include ./partials/_header %>
+    <body style="font-size:20px; padding:50px;">
+      <% include ./partials/_header %>
     <br>
-    <a href="/urls/new">Create a new Link</a>
+    <br>
+    <h2><a href="/urls/new">Create a New Link</a></h2>
+    <!-- <form action="/urls/new" method="GET">
+      <input type="submit" name="new" value="Create a New Link!">
+    </form> -->
     <br>
     <% for (var key in urls) { %>
-      <label> Short Link: </label>
+      <label><strong>Short Link:</strong></label>&nbsp;<a href="/urls/<%= key %>"> <%= key %> </a>
       <br>
-       <a href="<% urls[key].longURL %>"> <%= key %> </a>
+      <label><strong>Long Link:</strong></label>&nbsp;<a href="/u/<%= key %>"> <%= urls[key].longURL %> </a>
       <br>
-      <label> Long Link: </label>
       <br>
-      <%= urls[key].longURL %>
-      <br>
-      <form method="POST" action="/urls/<%= key %>" enctype="application/x-www-form-urlencoded">
+      <!-- <form method="POST" action="/urls/<%= key %>" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="_method" value="DELETE">
           <button type="submit">Delete</button>
       </form>
       <form method="POST" action="/urls/<%= key %>/edit" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="_method" value="GET">
           <button type="submit">Edit</button>
-      </form>
+      </form> -->
+      <br>
     <% } %>
-
+      <br>
+      <br>
     </body>
   </html>
