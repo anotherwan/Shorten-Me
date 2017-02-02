@@ -1,10 +1,9 @@
 <!DOCTYPE html>
   <html>
   <head>
-    <% include ./partials/_materializeHead %>
+    <%- include ./partials/_materializeHead %>
   </head>
   <body>
-    <% include ./partials/_materializeBody %>
     <% include ./partials/_header %>
     <br>
     <br>
@@ -13,12 +12,17 @@
         <h3 class="teal-text text-teal-lighten-2 col s8 offset-s2"><strong>Create a new short URL:</strong></h3>
         <form action="/urls" method="POST">
           <div class="input-field col s8 offset-s2">
-            <input id="longURL" type="text" name="longURL" placeholder="http://www.example.com">
+            <input id="longURL" type="text" name="longURL" value="http://www.">
             <label for="enterURL">Enter a URL:</label>
           </div>
-          <input class="blue-grey lighten-4 blue-grey-text text-darken-4 btn" type="submit" value="Submit">
+          <div class="row">
+            <div class="col s9 offset-s2">
+              <input class="blue-grey lighten-4 blue-grey-text text-darken-4 btn" type="submit" value="Submit">
+            </div>
+          </div>
         </form>
       </div>
     </div>
+    <%- include ./partials/_materializeBody %>
   </body>
   </html>

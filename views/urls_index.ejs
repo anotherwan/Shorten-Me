@@ -4,33 +4,32 @@
     <% include ./partials/_materializeHead %>
   </head>
   <body>
-    <% include ./partials/_materializeBody %>
     <% include ./partials/_header %>
     <br>
     <br>
-    <div class="container">
-      <div class="row">
-        <a class="btn-floating btn-large waves-effect waves-light blue-grey" href="/urls/new"><i class="material-icons">add</i></a>
-        <br>
+      <div class="container col s12">
+        <div class="row">
+          <a class="btn-floating btn-large waves-effect waves-light blue-grey" href="/urls/new"><i class="material-icons">add</i></a>
+        </div>
         <% for (var key in urls) { %>
-          <label> Short Link: </label>
-          <br>
-           <a href="/urls/<%= key %>"> <%= key %> </a>
-          <br>
-          <label> Long Link: </label>
-          <br>
-          <%= urls[key].longURL %>
-          <br>
-          <form method="POST" action="/urls/<%= key %>" enctype="application/x-www-form-urlencoded">
-            <input type="hidden" name="_method" value="DELETE">
-              <button type="submit">Delete</button>
-          </form>
-          <form method="POST" action="/urls/<%= key %>/edit" enctype="application/x-www-form-urlencoded">
-            <input type="hidden" name="_method" value="GET">
-              <button type="submit">Edit</button>
-          </form>
+          <ul class="collection blue-grey lighten-5 col s8 offset-s2">
+            <li class="collection-header blue-grey-text"><h5> <i class="material-icons">info_outline</i>&nbsp; Short Link: </h5>
+              <a href="/urls/<%= key %>" class="collection-item"><%= key %>
+            <form class="secondary-content" method="POST" action="/urls/<%= key %>" enctype="application/x-www-form-urlencoded">
+              <input type="hidden" name="_method" value="DELETE">
+              <button class="red-text" type="submit">
+                <i class="tiny material-icons">delete</i>&nbsp; Delete</button>
+            </form></a></li>
+            <li class="collection-header blue-grey-text"><h5><i class="material-icons">launch</i>&nbsp; Long Link: </h5>
+              <a href="/u/<%= key %>" class="valign-wrapper collection-item"><%= urls[key].longURL %>
+            <form class="secondary-content" method="POST" action="/urls/<%= key %>/edit" enctype="application/x-www-form-urlencoded">
+              <input type="hidden" name="_method" value="GET">
+              <button class="orange-text" type="submit">
+                <i class="tiny material-icons">mode_edit</i>&nbsp; Edit</button>
+            </form></a></li>
+        </ul>
         <% } %>
       </div>
-    </div>
+    <% include ./partials/_materializeBody %>
   </body>
   </html>
