@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-  <html lang="en">
-    <body style="font-size:20px; padding:50px;">
-      <% include ./partials/_header %>
-      <br>
-      <br>
-      <label><strong>Short Link:</strong></label>&nbsp; <%= locals.shortURL %>
-      <br>
-      <label><strong>Long Link:</strong></label>&nbsp; <a href="/u/<%= locals.shortURL %>"> <%= locals.longURL %> </a>
-      <br>
-      <br>
-      <form method="POST" action="/urls/<%= locals.shortURL %>" enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="_method" value="DELETE">
-          <button type="submit">Delete</button>
-      </form>
-      <form method="POST" action="/urls/<%= shortURL %>/edit" enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="_method" value="GET">
-          <button type="submit">Edit</button>
-      </form>
-      <br>
-    </body>
-  </html>
+<html>
+  <head>
+    <% include ./partials/_materializeHead %>
+  </head>
+  <body>
+    <% include ./partials/_header %>
+    <div class="container col s12">
+        <ul class="collection blue-grey lighten-5 col s8 offset-s2">
+          <li class="collection-header blue-grey-text"><h5> Short Link: </h5></li>
+            <li class="collection-item"> <%= locals.shortURL %>
+          <form class="secondary-content" method="POST" action="/urls/<%= locals.shortURL %>" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="_method" value="DELETE">
+            <button class="red-text" type="submit">
+              <i class="tiny material-icons">delete</i>&nbsp; Delete</button>
+          </form></li>
+          <li class="collection-header blue-grey-text"><h5>Long Link: </h5></li>
+            <li class="collection-item"><%= locals.longURL %>
+          <form class="secondary-content" method="POST" action="/urls/<%= locals.shortURL %>/edit" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="_method" value="GET">
+            <button class="orange-text" type="submit">
+              <i class="tiny material-icons">mode_edit</i>&nbsp; Edit</button>
+          </form></li>
+      </ul>
+    </div>
+      <% include ./partials/_materializeBody %>
+  </body>
+</html>

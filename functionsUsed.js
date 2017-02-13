@@ -1,4 +1,4 @@
-let requiredFunctions = {
+let functionsUsed = {
 
    generateRandomString: function (length, CHARS) {
     var result = ''
@@ -27,4 +27,4 @@ let requiredFunctions = {
 
 }
 
-module.exports = requiredFunctions
+module.exports = functionsUsed

@@ -1,21 +1,19 @@
-<nav>
-  <h1><a href="/urls">TinyApp</a></h1>
-  <% if (locals.email) { %>
-  <h3>Welcome,  <%= locals.email %> </h3>
-    <form action="/logout" method="POST">
-      <input type="submit" value="Logout">
-    </form>
-<% } else { %>
-  <br>
-  <form action="/login" method="GET">
-    <input type="submit" value="Login">
-  </form>
-  <!-- <a href="/login">Click here to Log in</a> -->
-  <br>
-  <form action="/register" method="GET">
-    <input type="submit" value="Register">
-  </form>
-  <!-- <a href="/register">Click here to register!</a> -->
-  <br>
-<% } %>
+<nav class="blue-grey">
+  <div class="container">
+    <div class="nav-wrapper blue-grey">
+      <a href="/urls" class="brand-logo left blue-grey-text text-lighten-5"> <i class="material-icons">settings_ethernet</i><bold>Shorten-Me</bold></a>
+      <ul id="nav-mobile" class="right hide-on-sm-and-down">
+        <% if (locals.email) { %>
+        <li><span class="white-text">Welcome,  <%= locals.email %>&nbsp;&nbsp;</span></li>
+          <li>
+            <form action="/logout" method ="POST">
+              <input class="blue-grey lighten-4 blue-grey-text text-darken-4 btn" type="submit" value="Logout">
+            </form>
+          </li>
+        <% } else { %>
+      </li><a class="btn blue-grey lighten-4 blue-grey-text text-darken-4" href="/login" name="login" value="Login">Login</a></li>
+      <li><a class="btn blue-grey lighten-4 blue-grey-text text-darken-4" href="/register" name="register" value="register">Register</a></li>
+      <% } %>
+    </div>
+  </div>
 </nav>

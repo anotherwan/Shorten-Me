@@ -1,16 +1,43 @@
 <!DOCTYPE html>
-  <html lang="en">
-    <body style="font-size:20px; padding:50px;">
-      <% include ./partials/_header %>
+<html>
+  <head>
+    <% include ./partials/_materializeHead %>
+  </head>
+  <body>
+    <% include ./partials/_header %>
+    <br>
+    <br>
+  <div class="container col s12">
+    <ul class="collection blue-grey lighten-5 col s12">
+        <li class="collection-header"><h4 class="teal-text text-teal-lighten-2 col s8 offset-s2"><strong>Edit The Long URL:</strong></h4></li>
+          <li class="collection-header blue-grey-text"><h5> Short Link: </h5></li>
+            <li class="collection-item"> <%= shortURL %></li>
+          <li class="collection-header blue-grey-text"><h5>Long Link: </h5></li>
+            <li class="collection-item">
+              <form method="POST" action="/urls/<%= shortURL %>" enctype="application/x-www-form-urlencoded">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="text" name="updatedLongURL" value="<%= longURL %>">
+            </li>
+            <li>
+              <button class="right green-text" type="submit">Update</button>
+              </form>
+            </li>
+      </div>
+    </ul>
+  </div>
+
+
+<!--
+          <label>Short URL: </label>
+              <%= shortURL %>
       <br>
-      <br>
-      <label><strong>Short URL:</strong></label>&nbsp; <%= shortURL %>
-      <br>
-      <label><strong>Long Link:</strong></label>
-        <form method="POST" action="/urls/<%= shortURL %>" enctype="application/x-www-form-urlencoded">
-          <input type="hidden" name="_method" value="PUT">
-          <input type="text" name="updatedLongURL" value="<%= longURL %>">
-            <button type="submit">Update</button>
-        </form>
-    </body>
-  </html>
+    <label> Long URL: </label>
+      <form method="POST" action="/urls/<%= shortURL %>" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="_method" value="PUT">
+        <input type="text" name="updatedLongURL" value="<%= longURL %>">
+          <button type="submit">Update</button>
+      </form> -->
+
+      <% include ./partials/_materializeBody %>
+  </body>
+</html>

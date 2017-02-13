@@ -1,8 +1,10 @@
-# TinyApp - URL Shortener
+# Shorten-Me - a URL Shortener
 
 ## Description
 
-Given a URL, TinyApp can shorten the link. Users create an account. When logged in, they can create and keep a collection of shortened links with their respective number of views. Clicking on the shortened links lead to the websites. These shortened links are easier to include in tweets. TinyApp is similar to apps such as TinyURL.com and bit.ly!   
+It's pretty simple! Given a URL, Shorten-Me will shorten the link. Users create an account. When logged in, they can create and keep a collection of shortened links. Links can be deleted or edited and clicking on the shortened links allows users to see each link individually. Clicking on the long link will take you to the long URL page.
+Copy and paste these shortened links to include them in your tweets.
+Shorten-Me is similar to apps such as TinyURL.com and bit.ly!   
 
 ## Expected Usage
 

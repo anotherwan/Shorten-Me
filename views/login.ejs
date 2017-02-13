@@ -1,30 +1,45 @@
 <!DOCTYPE html>
 <html>
-<body style="font-size:20px; padding:50px;">
-  <nav>
-     <h1><a href="/urls">TinyApp</a></h1>
-     <form action="/register" method="GET">
-       <input type="submit" name="register" value="Register">
-     </form>
-  <nav>
-  <br>
-  <h2> Login </h2>
-  <form action="/login" method="POST" style="margin:150px" enctype="application/x-www-form-urlencoded">
-    <input type="hidden" name="_method" value="PUT">
-    <label for="email"><strong>Email:</strong></label>
-    <br>
-    <input id="email" type="email" name="email" placeholder="email@example.com" style="width: 300px">
-    <br>
-    <br>
+  <head>
+    <% include ./partials/_materializeHead %>
+  </head>
+  <body>
+    <% include ./partials/_materializeBody %>
+    <nav class="blue-grey">
+      <div class="container">
+        <div class="nav-wrapper blue-grey">
+          <a href="/urls" class="brand-logo center blue-grey-text text-lighten-5"><i class="material-icons">settings_ethernet</i>Shorten-Me</a>
+          <ul id="nav-mobile" class="right hide-on-md-and-down">
+          <li><a class="blue-grey lighten-4 blue-grey-text text-darken-4 btn" href="/register" name="register" value="register">Register</a></li>
+        </div>
+      </div>
+    </nav>
     <br>
     <br>
-    <label for="password"><strong>Password:</strong></label>
-    <br>
-    <input id="password" type="password" name="password" placeholder="Password" style="width: 300px">
-    <br>
-    <br>
-    <br>
-    <input type="submit" value="Submit">
-  </form>
-</body>
+    <div class="container blue-grey lighten-5 col s12">
+      <div class="row">
+        <h3 class="teal-text text-teal-lighten-2 col s8 offset-s2"><strong>Login</strong></h3>
+          <form action="/login" method="POST" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="_method" value="PUT">
+            <div class="row">
+              <div class="input-field col s8 offset-s2">
+                <input id="email" type="email" name="email" class="validate" placeholder="email@example.com">
+                <label for="email">Email:</label>
+              </div>
+            </div>
+          <div class="row">
+            <div class="input-field col s8 offset-s2">
+            <input id="password" type="password" name="password" placeholder="Password" class="validate">
+            <label for="password">Password:</label>
+            </div>
+          </div>
+            <div class="row">
+              <div class="col s9 offset-s2">
+                <input class="blue-grey lighten-4 blue-grey-text text-darken-4 btn" type="submit" value="Submit">
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+  </body>
 </html>
